@@ -1,41 +1,38 @@
 import React, { useState } from 'react';
-import { callAzureFunction } from './AzureTrigger1';
-import { submitNameToAzureFunction } from './AzureTrigger2';
+import { sendRequestToAzureFunction } from './SendMessage'; 
 
 const App: React.FC = () => {
-  const [name, setName] = useState(''); // State to store the input name
+  const [name, setName] = useState('');
 
-  const handleButtonClick = async () => {
+  const callFunctionOne = async () => {
     try {
-      const result = await callAzureFunction();
+      const result = await sendRequestToAzureFunction(0, { name });
       console.log(result);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  // Handle changes in the text field
+  const callFunctionTwo = async () => {
+    try {
+      const result = await sendRequestToAzureFunction(1, { name });
+      console.log(result);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-  };
-
-  // Function to call the Azure Function with the name
-  const handleSubmit = async () => {
-    try {
-      const result = await submitNameToAzureFunction(name);
-      console.log(result);
-    } catch (error) {
-      console.error('Error:', error);
-    }
   };
 
   return (
     <div>
       <h1>My React App</h1>
-      <button onClick={handleButtonClick}>Call Azure Function</button>
+      <button onClick={callFunctionOne}>Call Azure Function 1</button>
       <div>
         <input type="text" value={name} onChange={handleInputChange} placeholder="Enter name" />
-        <button onClick={handleSubmit}>Submit Name</button>
+        <button onClick={callFunctionTwo}>Submit Name to Function 2</button>
       </div>
     </div>
   );
